@@ -1,6 +1,4 @@
-# Jackdaw 
-
-[![Docs](https://img.shields.io/badge/docs-wiki-blue.svg?style=for-the-badge)](https://github.com/robertcoltheart/Jackdaw/wiki) [![NuGet](https://img.shields.io/nuget/v/Jackdaw?style=for-the-badge)](https://www.nuget.org/packages/Jackdaw) [![Discussions](https://img.shields.io/badge/DISCUSS-ON%20GITHUB-yellow?style=for-the-badge)](https://github.com/robertcoltheart/Jackdaw/discussions) [![License](https://img.shields.io/github/license/robertcoltheart/Jackdaw?style=for-the-badge)](https://github.com/robertcoltheart/Jackdaw/blob/master/LICENSE)
+﻿## About
 
 A thing that does something.
 
@@ -21,6 +19,3 @@ Discuss with us on [Discussions](https://github.com/robertcoltheart/Jackdaw/disc
 
 ## Contributing
 Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on how to contribute to this project.
-
-## License
-Jackdaw is released under the [MIT License](LICENSE)
