@@ -10,7 +10,7 @@
   <ItemGroup>
     <PackageReference Include="Confluent.Kafka" Version="2.1.0" />
     <PackageReference Include="Confluent.SchemaRegistry" Version="2.1.0" />
-    <PackageReference Include="Confluent.SchemaRegistry.Serdes.Avro" Version="2.0.2" />
+    <PackageReference Include="Confluent.SchemaRegistry.Serdes.Avro" Version="2.1.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />
     <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
