@@ -2,6 +2,11 @@
 
 public class Consumer<TKey, TValue> : IConsumer<TKey, TValue>
 {
+    internal Consumer()
+    {
+        // set up rebalancer
+    }
+
     public void Subscribe(string topic)
     {
     }

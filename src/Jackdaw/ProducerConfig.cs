@@ -1,6 +1,5 @@
 ﻿namespace Jackdaw;
 
-public class ProducerConfig
+public class ProducerConfig : ClientConfig
 {
-    public string BootstrapServers { get; set; }
 }

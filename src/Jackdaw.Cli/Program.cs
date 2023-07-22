@@ -13,15 +13,15 @@ var consumerConfig = new ConsumerConfig
     BootstrapServers = "localhost:9092",
     AutoOffsetReset = AutoOffsetReset.Earliest,
     GroupId = "my-group"
-
 };
 
 var consumer = new ConsumerBuilder<string, string>(consumerConfig)
     .Build();
 
+consumer.Subscribe("my-topic");
+
 await producer.ProduceAsync("my-topic", new Message<string, string> { Key = "key", Value = "value" });
 
-//consumer.Subscribe("my-topic");
+var result = consumer.Consume();
 
-//var result = consumer.Consume();
 Console.ReadKey();
