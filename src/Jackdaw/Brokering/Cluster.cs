@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks.Dataflow;
 using Jackdaw.IO;
 using Jackdaw.Protocol;
+using Jackdaw.Routing;
 
 namespace Jackdaw.Brokering;
 
@@ -8,21 +9,30 @@ public class Cluster
 {
     private readonly ClientConfig config;
 
+    private readonly Action<LogMessage> logger;
+
     private readonly NodeFactory nodeFactory;
 
     private readonly ActionBlock<ClusterMessage> agent;
 
     private readonly TimeoutScheduler timeoutScheduler;
 
-    private Pools pools;
-
     private readonly Dictionary<INode, BrokerMetadata> nodes = new();
+
+    private readonly Random random = new((int) (DateTime.Now.Ticks & 0xffffffff));
+
+    private Pools pools;
 
     private Timer refreshMetadata;
 
-    public Cluster(ClientConfig config)
+    private RoutingTable? routingTable;
+
+    private bool started;
+
+    public Cluster(ClientConfig config, Action<LogMessage> logger)
     {
         this.config = config;
+        this.logger = logger;
 
         timeoutScheduler = new TimeoutScheduler(config.GetSocketTimeoutMs() / 2);
         pools = CreatePools(config);
@@ -57,6 +67,8 @@ public class Cluster
             null,
             config.GetTopicMetadataRefreshIntervalMs(),
             config.GetTopicMetadataRefreshIntervalMs());
+
+        started = true;
     }
 
     private static Pools CreatePools(ClientConfig config)
@@ -88,11 +100,51 @@ public class Cluster
 
     private void RefreshMetadata()
     {
-
+        agent.Post(new ClusterMessage {MessageType = MessageType.Metadata});
     }
 
     private async Task ProcessMessage(ClusterMessage message)
     {
+        try
+        {
+            if (message.MessageType == MessageType.Metadata)
+            {
+                await ProcessFullMetadata(message.MessageValue.Promise);
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 
+    private async Task ProcessFullMetadata(TaskCompletionSource<RoutingTable> promise)
+    {
+        if (routingTable == null || routingTable.LastRefreshed + TimeSpan.FromSeconds(42) <= DateTime.UtcNow)
+        {
+            var node = ChooseRefreshNode();
+
+            try
+            {
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+    }
+
+    private INode ChooseRefreshNode()
+    {
+        if (nodes.Count == 0)
+        {
+            logger(new LogMessage(nameof(Cluster), SyslogLevel.Error, "", "No nodes are running, this shouldn't have happened"));
+
+            Bootstrap();
+        }
+
+        return nodes.Keys.ElementAt(random.Next(nodes.Count));
     }
 }

@@ -20,18 +20,16 @@ public class Tests
         {
             BootstrapServers = "localhost:9092",
             AutoOffsetReset = AutoOffsetReset.Earliest,
-            GroupId = "my-group"
-            
+            GroupId = "my-group",
         };
 
         var consumer = new ConsumerBuilder<string, string>(consumerConfig)
+            .SetLogHandler((_, log) => Console.WriteLine(log.Message))
             .Build();
 
         producer.Produce("my-topic", new Message<string, string> { Key = "key", Value = "value" });
 
         consumer.Subscribe("my-topic");
         var result = consumer.Consume();
-
-        Confluent.Kafka.ConsumerConfig c;
     }
 }

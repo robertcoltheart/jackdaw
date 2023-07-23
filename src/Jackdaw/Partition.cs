@@ -1,4 +1,6 @@
-﻿namespace Jackdaw;
+﻿using Jackdaw.Brokering;
+
+namespace Jackdaw;
 
 public struct Partition : IEquatable<Partition>
 {
@@ -10,6 +12,10 @@ public struct Partition : IEquatable<Partition>
     }
 
     public int Value { get; }
+
+    internal INode Leader { get; }
+
+    internal int Isr { get; }
 
     public override bool Equals(object obj)
     {
