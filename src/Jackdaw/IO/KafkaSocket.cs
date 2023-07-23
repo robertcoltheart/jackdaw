@@ -20,11 +20,22 @@ public class KafkaSocket : Socket, ISocket
 
     public bool SendAsync(ISocketAsyncEventArgs args)
     {
-        throw new NotImplementedException();
+        return SendAsync((SocketAsyncEventArgs)args);
     }
 
     public bool ReceiveAsync(ISocketAsyncEventArgs args)
     {
-        throw new NotImplementedException();
+        return ReceiveAsync((SocketAsyncEventArgs)args);
+    }
+
+    void ISocket.Close()
+    {
+        Shutdown(SocketShutdown.Both);
+        Dispose();
+    }
+
+    public ISocketAsyncEventArgs CreateEventArgs(Action onCompleted)
+    {
+        return new KafkaSocketAsyncEventArgs(onCompleted);
     }
 }

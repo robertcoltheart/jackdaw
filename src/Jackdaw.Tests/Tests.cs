@@ -1,7 +1,7 @@
 ﻿using Confluent.Kafka;
 using Xunit;
 
-namespace Jackdaw.Tests;
+namespace Confluent;
 
 public class Tests
 {

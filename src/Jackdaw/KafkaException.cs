@@ -6,4 +6,9 @@ public class KafkaException : Exception
         : base(message)
     {
     }
+
+    public KafkaException(string message, Exception innerException)
+        : base(message, innerException)
+    {
+    }
 }
