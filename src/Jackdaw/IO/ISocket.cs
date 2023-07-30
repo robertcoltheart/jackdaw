@@ -1,6 +1,8 @@
-﻿namespace Jackdaw.IO;
+﻿using System.Net.Sockets;
 
-public interface ISocket
+namespace Jackdaw.IO;
+
+public interface ISocket : IDisposable
 {
     bool Connected { get; }
 
@@ -12,11 +14,9 @@ public interface ISocket
 
     Task ConnectAsync();
 
+    int Send(byte[] buffer, int offset, int size, SocketFlags flags, out SocketError error);
+
     bool SendAsync(ISocketAsyncEventArgs args);
 
     bool ReceiveAsync(ISocketAsyncEventArgs args);
-
-    void Close();
-
-    ISocketAsyncEventArgs CreateEventArgs(Action onCompleted);
 }

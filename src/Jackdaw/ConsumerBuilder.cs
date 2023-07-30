@@ -2,10 +2,13 @@
 
 public class ConsumerBuilder<TKey, TValue>
 {
+    private readonly ConsumerConfig config;
+
     protected internal Action<IConsumer<TKey, TValue>, LogMessage> LogHandler { get; set; }
 
     public ConsumerBuilder(ConsumerConfig config)
     {
+        this.config = config;
     }
 
     public ConsumerBuilder<TKey, TValue> SetLogHandler(Action<IConsumer<TKey, TValue>, LogMessage> handler)
@@ -17,8 +20,6 @@ public class ConsumerBuilder<TKey, TValue>
 
     public IConsumer<TKey, TValue> Build()
     {
-        var config = new ConsumerConfig();
-
         return new Consumer<TKey, TValue>(config, LogHandler);
     }
 }

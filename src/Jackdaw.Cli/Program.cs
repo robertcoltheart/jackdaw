@@ -20,7 +20,7 @@ var consumer = new ConsumerBuilder<string, string>(consumerConfig)
 
 consumer.Subscribe("my-topic");
 
-await producer.ProduceAsync("my-topic", new Message<string, string> { Key = "key", Value = "value" });
+//await producer.ProduceAsync("my-topic", new Message<string, string> { Key = "key", Value = "value" });
 
 var result = consumer.Consume();
 

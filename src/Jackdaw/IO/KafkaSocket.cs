@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 
 namespace Jackdaw.IO;
 
@@ -20,22 +21,24 @@ public class KafkaSocket : Socket, ISocket
 
     public bool SendAsync(ISocketAsyncEventArgs args)
     {
-        return SendAsync((SocketAsyncEventArgs)args);
+        if (args is SocketAsyncEventArgs socketArgs)
+        {
+            byte[] v = Array.Empty<byte>();
+            socketArgs.SetBuffer(v, 0, v.Length);
+
+            return SendAsync(socketArgs);
+        }
+
+        return false;
     }
 
     public bool ReceiveAsync(ISocketAsyncEventArgs args)
     {
-        return ReceiveAsync((SocketAsyncEventArgs)args);
-    }
+        if (args is SocketAsyncEventArgs socketArgs)
+        {
+            return ReceiveAsync(socketArgs);
+        }
 
-    void ISocket.Close()
-    {
-        Shutdown(SocketShutdown.Both);
-        Dispose();
-    }
-
-    public ISocketAsyncEventArgs CreateEventArgs(Action onCompleted)
-    {
-        return new KafkaSocketAsyncEventArgs(onCompleted);
+        return false;
     }
 }

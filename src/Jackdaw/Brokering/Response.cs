@@ -1,12 +1,6 @@
-﻿using Jackdaw.IO;
+﻿namespace Jackdaw.Brokering;
 
-namespace Jackdaw.Brokering;
-
-public struct Response
+public class Response
 {
-    public ResponseType ResponseType;
-
-    public IConnection Connection;
-
-    public ResponseValue ResponseValue;
+    
 }

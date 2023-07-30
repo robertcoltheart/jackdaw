@@ -2,14 +2,7 @@
 
 public class BrokerMetadata
 {
-    public string Host;
+    public string Host { get; set; }
 
-    public int Port;
-
-    public int Id;
-
-    public override string ToString()
-    {
-        return $"(Id:{Id} Host:{Host} Port:{Port})";
-    }
+    public int Port { get; set; }
 }

@@ -1,8 +1,6 @@
 ﻿namespace Jackdaw.Brokering;
 
-public struct Request
+public class Request
 {
-    public RequestType RequestType;
-
-    public RequestValue RequestValue;
+    public byte[] Data;
 }

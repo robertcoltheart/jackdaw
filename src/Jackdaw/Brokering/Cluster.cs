@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks.Dataflow;
 using Jackdaw.IO;
 using Jackdaw.Protocol;
-using Jackdaw.Routing;
 
 namespace Jackdaw.Brokering;
 
@@ -9,48 +8,33 @@ public class Cluster
 {
     private readonly ClientConfig config;
 
-    private readonly Action<LogMessage> logger;
-
     private readonly NodeFactory nodeFactory;
 
-    private readonly ActionBlock<ClusterMessage> agent;
-
-    private readonly TimeoutScheduler timeoutScheduler;
+    private readonly ActionBlock<ClusterMessage> messageQueue;
 
     private readonly Dictionary<INode, BrokerMetadata> nodes = new();
 
-    private readonly Random random = new((int) (DateTime.Now.Ticks & 0xffffffff));
-
-    private Pools pools;
+    private readonly Random random = new();
 
     private Timer refreshMetadata;
 
-    private RoutingTable? routingTable;
-
     private bool started;
 
-    public Cluster(ClientConfig config, Action<LogMessage> logger)
+    public Cluster(ClientConfig config)
     {
         this.config = config;
-        this.logger = logger;
-
-        timeoutScheduler = new TimeoutScheduler(config.GetSocketTimeoutMs() / 2);
-        pools = CreatePools(config);
 
         nodeFactory = (host, port) => new Node(
+            config,
             $"{host}:{port}",
             () => new Connection(
                 host,
                 port,
                 x => new KafkaSocket(x),
-                pools.SocketBuffersPool,
-                pools.RequestsBuffersPool,
                 config.GetSocketSendBufferBytes(),
-                config.GetSocketReceiveBufferBytes()),
-            config,
-            timeoutScheduler);
+                config.GetSocketReceiveBufferBytes()));
 
-        agent = new ActionBlock<ClusterMessage>(ProcessMessage, new ExecutionDataflowBlockOptions
+        messageQueue = new ActionBlock<ClusterMessage>(ProcessMessage, new ExecutionDataflowBlockOptions
         {
             TaskScheduler = TaskScheduler.Default
         });
@@ -69,16 +53,6 @@ public class Cluster
             config.GetTopicMetadataRefreshIntervalMs());
 
         started = true;
-    }
-
-    private static Pools CreatePools(ClientConfig config)
-    {
-        var pools = new Pools();
-        pools.InitializeSocketBufferPool(Math.Max(config.GetSocketSendBufferBytes(), config.GetSocketReceiveBufferBytes()));
-        pools.InitializeRequestsBuffersPool();
-        pools.InitializeMessageBuffersPool(10000, 16384);
-
-        return pools;
     }
 
     private void Bootstrap()
@@ -100,39 +74,28 @@ public class Cluster
 
     private void RefreshMetadata()
     {
-        agent.Post(new ClusterMessage {MessageType = MessageType.Metadata});
+        messageQueue.Post(new ClusterMessage {MessageType = MessageType.Metadata});
     }
 
     private async Task ProcessMessage(ClusterMessage message)
     {
-        try
+        if (message.MessageType == MessageType.Metadata)
         {
-            if (message.MessageType == MessageType.Metadata)
-            {
-                await ProcessFullMetadata(message.MessageValue.Promise);
-            }
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
+            await ProcessFullMetadata();
         }
     }
 
-    private async Task ProcessFullMetadata(TaskCompletionSource<RoutingTable> promise)
+    private async Task ProcessFullMetadata()
     {
-        if (routingTable == null || routingTable.LastRefreshed + TimeSpan.FromSeconds(42) <= DateTime.UtcNow)
+        try
         {
             var node = ChooseRefreshNode();
 
-            try
-            {
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
+            var response = await node.FetchMetadata();
+        }
+        catch
+        {
+            RefreshMetadata();
         }
     }
 
@@ -140,8 +103,6 @@ public class Cluster
     {
         if (nodes.Count == 0)
         {
-            logger(new LogMessage(nameof(Cluster), SyslogLevel.Error, "", "No nodes are running, this shouldn't have happened"));
-
             Bootstrap();
         }
 

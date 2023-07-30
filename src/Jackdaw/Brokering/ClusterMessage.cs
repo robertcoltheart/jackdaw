@@ -1,8 +1,6 @@
 ﻿namespace Jackdaw.Brokering;
 
-public struct ClusterMessage
+public class ClusterMessage
 {
-    public MessageType MessageType;
-
-    public MessageValue MessageValue;
+    public MessageType MessageType { get; set; }
 }
