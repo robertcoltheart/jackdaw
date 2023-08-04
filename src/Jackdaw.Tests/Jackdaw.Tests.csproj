@@ -11,7 +11,7 @@
     <PackageReference Include="Confluent.Kafka" Version="2.2.0" />
     <PackageReference Include="Confluent.SchemaRegistry" Version="2.2.0" />
     <PackageReference Include="Confluent.SchemaRegistry.Serdes.Avro" Version="2.2.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.3" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.0" />
     <PackageReference Include="xunit" Version="2.5.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.0">
       <PrivateAssets>all</PrivateAssets>
