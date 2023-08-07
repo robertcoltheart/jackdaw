@@ -21,7 +21,7 @@ public class ClientConfig : Config
             return Math.Max(SocketSendBufferBytes.Value, 100000000);
         }
 
-        return 1024 * 1024;
+        return 8192;
     }
 
     internal int GetSocketReceiveBufferBytes()
@@ -31,7 +31,7 @@ public class ClientConfig : Config
             return Math.Max(SocketReceiveBufferBytes.Value, 100000000);
         }
 
-        return 1024 * 1024;
+        return 8192;
     }
 
     internal int GetSocketTimeoutMs()
