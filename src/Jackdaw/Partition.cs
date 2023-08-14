@@ -9,6 +9,8 @@ public struct Partition : IEquatable<Partition>
     public Partition(int value)
     {
         Value = value;
+        Leader = default;
+        Isr = 0;
     }
 
     public int Value { get; }

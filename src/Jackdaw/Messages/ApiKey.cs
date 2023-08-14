@@ -1,6 +1,7 @@
 ﻿namespace Jackdaw.Messages;
 
-internal enum ApiKey : short
+public enum ApiKey : short
 {
-    Metadata = 3
+    Metadata = 3,
+    ApiVersions = 18
 }
