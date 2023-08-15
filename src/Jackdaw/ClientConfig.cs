@@ -2,6 +2,22 @@
 
 public class ClientConfig : Config
 {
+    public ClientConfig()
+    {
+    }
+
+    public ClientConfig(ClientConfig config)
+        : base(config)
+    {
+    }
+
+    public ClientConfig(IDictionary<string, string> config)
+        : base(config)
+    {
+    }
+
+
+
     public string BootstrapServers { get; set; }
 
     public int? SocketSendBufferBytes { get; set; }

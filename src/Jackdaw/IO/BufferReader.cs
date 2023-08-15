@@ -1,11 +1,9 @@
 ﻿using System.Buffers.Binary;
-using System.ComponentModel.DataAnnotations;
-using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 using Jackdaw.Messages;
 
-namespace Jackdaw.Serialization;
+namespace Jackdaw.IO;
 
 public ref struct BufferReader
 {
@@ -57,7 +55,7 @@ public ref struct BufferReader
 
         Advance(2);
 
-        return (ApiKey) value;
+        return (ApiKey)value;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -99,9 +97,9 @@ public ref struct BufferReader
             return string.Empty;
         }
 
-        var value = Encoding.UTF8.GetString(buffer.Slice(index, (int) length - 1));
+        var value = Encoding.UTF8.GetString(buffer.Slice(index, (int)length - 1));
 
-        Advance((int) length - 1);
+        Advance((int)length - 1);
 
         return value;
     }
@@ -110,124 +108,12 @@ public ref struct BufferReader
     public uint ReadUVarInt32()
     {
         return (uint) ReadVarInt(32);
-
-        //var b = ReadByte();
-        //var x = (uint) (b & 0x7f);
-
-        //if ((b & 0x80) == 0)
-        //{
-        //    return x;
-        //}
-
-        //b = ReadByte();
-        //x |= (uint) ((b & 0x7f) << 7);
-
-        //if ((b & 0x80) == 0)
-        //{
-        //    return x;
-        //}
-
-        //b = ReadByte();
-        //x |= (uint) ((b & 0x7f) << 14);
-
-        //if ((b & 0x80) == 0)
-        //{
-        //    return x;
-        //}
-
-        //b = ReadByte();
-        //x |= (uint) ((b & 0x7f) << 21);
-
-        //if ((b & 0x80) == 0)
-        //{
-        //    return x;
-        //}
-
-        //b = ReadByte();
-        //x |= (uint) (b << 28);
-
-        //if ((b & 0x80) == 0)
-        //{
-        //    return x;
-        //}
-
-        //return 0;
-
-        //long b;
-        //ulong result = 0;
-        //int i = 0;
-
-        //while (((b = ReadByte()) & 0x80) != 0)
-        //{
-        //    result |= (ulong) (b & 0x7f);
-        //    i += 7;
-
-        //    if (i > 28)
-        //    {
-        //        throw new OverflowException();
-        //    }
-        //}
-
-        //result |= (ulong) (b << i);
-
-        //return (uint) result;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public long ReadAsVarInt64()
     {
         return (long) ReadVarInt(64);
-
-
-        //var n = 11;
-        //ulong x = 0;
-        //uint s = 0;
-
-        //while (n > 0)
-        //{
-        //    var b = ReadByte();
-
-        //    if ((b & 0x80) == 0)
-        //    {
-        //        x |= (uint) b << (int) s;
-        //        return (long) x;
-        //    }
-
-        //    x |= (ulong) (b & 0x7f) << (int) s;
-        //    s += 7;
-        //    n--;
-        //}
-
-        //return 0;
-
-        //ulong value = 0L;
-        //var i = 0;
-        //long b;
-
-        //while (((b = ReadByte()) & 0x80) != 0)
-        //{
-        //    value |= (ulong) (b & 0x7f) << i;
-        //    i += 7;
-
-        //    if (i > 63)
-        //    {
-        //        throw new OverflowException();
-        //    }
-        //}
-
-        //if (i == 63 && b != 0x01)
-        //{
-        //    throw new OverflowException();
-        //}
-
-        //value |= (ulong) b << i;
-
-        //if ((value & 0x1) == 0x1)
-        //{
-        //    return -1 * ((long) (value >> 1) + 1);
-        //}
-
-        //return (long) (value >> 1);
     }
 
     private ulong ReadVarInt(int bytes)

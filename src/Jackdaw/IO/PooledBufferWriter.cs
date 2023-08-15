@@ -1,6 +1,6 @@
 ﻿using System.Buffers;
 
-namespace Jackdaw.Messages;
+namespace Jackdaw.IO;
 
 internal class PooledBufferWriter : IBufferWriter<byte>, IDisposable
 {

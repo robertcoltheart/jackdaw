@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using System.Net.Sockets;
-using Jackdaw.Serialization;
+using Jackdaw.IO;
 
 var buffer = new byte[1024 * 1024];
 
