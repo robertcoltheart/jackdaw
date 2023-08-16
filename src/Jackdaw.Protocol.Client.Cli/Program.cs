@@ -5,6 +5,8 @@ var producerConfig = new ProducerConfig
     BootstrapServers = "localhost:9092"
 };
 
+producerConfig.Set("request.required.acks", "5");
+
 var producer = new ProducerBuilder<string, string>(producerConfig)
     .Build();
 
