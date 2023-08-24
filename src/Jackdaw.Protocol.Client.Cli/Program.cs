@@ -1,5 +1,9 @@
 ﻿using Confluent.Kafka;
 
+var a = new AdminClientConfig();
+var b = new ConsumerConfig();
+var c = new ProducerConfig();
+
 var producerConfig = new ProducerConfig
 {
     BootstrapServers = "localhost:9092"

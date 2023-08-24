@@ -16,9 +16,11 @@ public class ClientConfig : Config
     {
     }
 
-
-
-    public string BootstrapServers { get; set; }
+    public string BootstrapServers
+    {
+        get => Get("bootstrap.servers");
+        set => Set("bootstrap.servers", value);
+    }
 
     public int? SocketSendBufferBytes { get; set; }
 
