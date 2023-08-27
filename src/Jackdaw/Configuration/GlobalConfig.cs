@@ -7,4 +7,6 @@ internal class GlobalConfig : IConfig
     public string BootstrapServers { get; set; }
 
     public int SocketSendBufferBytes { get; set; }
+
+    public IReadOnlyDictionary<string, string> Extra { get; set; }
 }

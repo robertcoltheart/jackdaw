@@ -9,7 +9,8 @@ var producerConfig = new ProducerConfig
     BootstrapServers = "localhost:9092"
 };
 
-producerConfig.Set("request.required.acks", "5");
+producerConfig.Set("max.in.flight.requests.per.connection", "1000001");
+producerConfig.Set("max.in.flight", "1000002");
 
 var producer = new ProducerBuilder<string, string>(producerConfig)
     .Build();

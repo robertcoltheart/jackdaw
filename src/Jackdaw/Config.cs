@@ -1,9 +1,12 @@
 ﻿using System.Collections;
+using Jackdaw.Configuration;
 
 namespace Jackdaw;
 
 public class Config : IEnumerable<KeyValuePair<string, string>>
 {
+    private static readonly ConfigBuilder KnownConfig = new();
+
     private static readonly Dictionary<string, string> EnumNameToValueLoookup = new(StringComparer.OrdinalIgnoreCase)
     {
         {"consistentrandom", "consistent_random"},
@@ -151,5 +154,10 @@ public class Config : IEnumerable<KeyValuePair<string, string>>
     IEnumerator IEnumerable.GetEnumerator()
     {
         return GetEnumerator();
+    }
+
+    internal IConfig Build()
+    {
+        return KnownConfig.Build(properties);
     }
 }
