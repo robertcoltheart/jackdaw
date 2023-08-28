@@ -10,8 +10,9 @@ internal class ConfigBuilder
     public ConfigBuilder()
     {
         Add("metadata.broker.list", c => c.BootstrapServers).Alias("bootstrap.servers");
-        Add("client.id", c => c.ClientId).Default("rdkafka");
+        Add("client.id", c => c.ClientId).Default("jackdaw");
         Add("socket.send.buffer.bytes", c => c.SocketSendBufferBytes).Default(0).Range(0, 100_000_000);
+        Add("broker.address.family", c => c.BrokerAddressFamily);
     }
 
     public IConfig Build(Dictionary<string, string> properties)
@@ -29,19 +30,25 @@ internal class ConfigBuilder
         return config;
     }
 
-    private StringConfigEvaluator Add(string name, Expression<Func<GlobalConfig, string>> expression)
+    private StringEvaluator Add(string name, Expression<Func<GlobalConfig, string>> expression)
     {
-        return Add(new StringConfigEvaluator(name, expression.GetProperty()));
+        return Add(new StringEvaluator(name, expression.GetProperty()));
     }
 
-    private IntConfigEvaluator Add(string name, Expression<Func<GlobalConfig, int>> expression)
+    private Int32Evaluator Add(string name, Expression<Func<GlobalConfig, int>> expression)
     {
-        return Add(new IntConfigEvaluator(name, expression.GetProperty()));
+        return Add(new Int32Evaluator(name, expression.GetProperty()));
     }
 
-    private DoubleConfigEvaluator Add(string name, Expression<Func<GlobalConfig, double>> expression)
+    private DoubleEvaluator Add(string name, Expression<Func<GlobalConfig, double>> expression)
     {
-        return Add(new DoubleConfigEvaluator(name, expression.GetProperty()));
+        return Add(new DoubleEvaluator(name, expression.GetProperty()));
+    }
+
+    private EnumEvaluator<T> Add<T>(string name, Expression<Func<GlobalConfig, T>> expression)
+        where T : struct
+    {
+        return Add(new EnumEvaluator<T>(name, expression.GetProperty()));
     }
 
     private T Add<T>(T evaluator)

@@ -7,4 +7,6 @@ internal interface IConfig
     string BootstrapServers { get; }
 
     int SocketSendBufferBytes { get; }
+
+    BrokerAddressFamily BrokerAddressFamily { get; }
 }

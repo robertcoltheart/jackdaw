@@ -2,51 +2,51 @@
 
 namespace Jackdaw.Configuration.Evaluation;
 
-internal class IntConfigEvaluator : ConfigEvaluator<int>
+internal class DoubleEvaluator : ConfigEvaluator<double>
 {
-    private int defaultValue;
+    private double defaultValue;
 
     private Range? range;
 
-    public IntConfigEvaluator(string name, PropertyInfo property)
+    public DoubleEvaluator(string name, PropertyInfo property)
         : base(name, property)
     {
     }
 
-    public IntConfigEvaluator Alias(string alias)
+    public DoubleEvaluator Alias(string alias)
     {
         Aliases.Add(alias);
 
         return this;
     }
 
-    public IntConfigEvaluator Default(int value)
+    public DoubleEvaluator Default(double value)
     {
         defaultValue = value;
 
         return this;
     }
 
-    public IntConfigEvaluator Range(int start, int end)
+    public DoubleEvaluator Range(int start, int end)
     {
         range = new Range(start, end);
 
         return this;
     }
 
-    protected override int GetDefaultValue()
+    protected override double GetDefaultValue()
     {
         return defaultValue;
     }
 
-    protected override int GetValue(string? value)
+    protected override double GetValue(string? value)
     {
         if (string.IsNullOrEmpty(value))
         {
-            throw new ArgumentNullException($"Integer configuration property \"{Name}\" cannot be set to empty value");
+            throw new ArgumentNullException($"Float configuration property \"{Name}\" cannot be set to empty value");
         }
 
-        if (!int.TryParse(value, out var result))
+        if (!double.TryParse(value, out var result))
         {
             throw new ArgumentException($"Invalid value for configuration property \"{Name}\"");
         }

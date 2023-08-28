@@ -2,35 +2,35 @@
 
 namespace Jackdaw.Configuration.Evaluation;
 
-internal class StringConfigEvaluator : ConfigEvaluator<string>
+internal class StringEvaluator : ConfigEvaluator<string>
 {
     private string? defaultValue;
 
-    public StringConfigEvaluator(string name, PropertyInfo property)
+    public StringEvaluator(string name, PropertyInfo property)
         : base(name, property)
     {
     }
 
-    public StringConfigEvaluator Alias(string alias)
+    public StringEvaluator Alias(string alias)
     {
         Aliases.Add(alias);
 
         return this;
     }
 
-    public StringConfigEvaluator Default(string? value)
+    public StringEvaluator Default(string? value)
     {
         defaultValue = value;
 
         return this;
     }
 
-    public StringConfigEvaluator Allowed(params string[] values)
+    public StringEvaluator Allowed(params string[] values)
     {
         return this;
     }
 
-    public StringConfigEvaluator AllowMultiple()
+    public StringEvaluator AllowMultiple()
     {
         return this;
     }

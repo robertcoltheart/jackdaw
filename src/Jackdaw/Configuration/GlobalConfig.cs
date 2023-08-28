@@ -8,5 +8,7 @@ internal class GlobalConfig : IConfig
 
     public int SocketSendBufferBytes { get; set; }
 
+    public BrokerAddressFamily BrokerAddressFamily { get; set; }
+
     public IReadOnlyDictionary<string, string> Extra { get; set; }
 }

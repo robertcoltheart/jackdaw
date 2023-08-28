@@ -2,23 +2,23 @@
 
 namespace Jackdaw.Configuration.Evaluation;
 
-internal class BoolConfigEvaluator : ConfigEvaluator<bool>
+internal class BooleanEvaluator : ConfigEvaluator<bool>
 {
     private bool defaultValue;
 
-    public BoolConfigEvaluator(string name, PropertyInfo property)
+    public BooleanEvaluator(string name, PropertyInfo property)
         : base(name, property)
     {
     }
 
-    public BoolConfigEvaluator Alias(string alias)
+    public BooleanEvaluator Alias(string alias)
     {
         Aliases.Add(alias);
 
         return this;
     }
 
-    public BoolConfigEvaluator Default(bool value)
+    public BooleanEvaluator Default(bool value)
     {
         defaultValue = value;
 
