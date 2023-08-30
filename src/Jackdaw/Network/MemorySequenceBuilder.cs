@@ -27,7 +27,7 @@ internal class MemorySequenceBuilder
 
     public void Append(ReadOnlyMemory<byte> buffer)
     {
-        last = MemorySegment.Create(buffer);
+        last = MemorySegment.Create(buffer, last);
 
         first ??= last;
     }

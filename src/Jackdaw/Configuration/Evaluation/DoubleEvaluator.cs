@@ -53,7 +53,7 @@ internal class DoubleEvaluator : ConfigEvaluator<double>
 
         if (range != null)
         {
-            if (result < range.Value.Start.Value || result > range.Value.End.Value)
+            if (result < range.Value.Start || result > range.Value.End)
             {
                 throw new ArgumentException($"Configuration property \"{Name}\" value {result} is outside allowed range {range}");
             }

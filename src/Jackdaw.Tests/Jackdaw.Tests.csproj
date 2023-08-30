@@ -8,9 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Confluent.Kafka" Version="2.2.0" />
-    <PackageReference Include="Confluent.SchemaRegistry" Version="2.2.0" />
-    <PackageReference Include="Confluent.SchemaRegistry.Serdes.Avro" Version="2.2.0" />
     <PackageReference Include="FakeItEasy" Version="7.4.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.0" />
     <PackageReference Include="xunit" Version="2.5.0" />
