@@ -12,7 +12,11 @@ internal class ConfigBuilder
         Add("metadata.broker.list", c => c.BootstrapServers).Alias("bootstrap.servers");
         Add("client.id", c => c.ClientId).Default("jackdaw");
         Add("socket.send.buffer.bytes", c => c.SocketSendBufferBytes).Default(0).Range(0, 100_000_000);
-        Add("broker.address.family", c => c.BrokerAddressFamily);
+        Add("broker.address.family", c => c.BrokerAddressFamily).Default(BrokerAddressFamily.Any);
+        Add("security.protocol", c => c.SecurityProtocol).Default(SecurityProtocol.Plaintext);
+        Add("request.required.acks", c => c.RequestRequiredAcks).Alias("acks").Default(-1).Range(-1, 1000);
+        Add("queue.buffering.max.ms", c => c.QueueBufferingMaxMs).Alias("linger.ms").Default(4).Range(0, 900_000);
+        Add("debug", c => c.Debug).Allowed("generic", "broker", "topic", "metadata", "feature", "queue", "msg", "protocol", "cgrp", "security", "fetch", "interceptor", "plugin", "consumer", "admin", "eos", "mock", "assigner", "conf", "all");
     }
 
     public IConfig Build(Dictionary<string, string> properties)

@@ -9,4 +9,12 @@ internal interface IConfig
     int SocketSendBufferBytes { get; }
 
     BrokerAddressFamily BrokerAddressFamily { get; }
+
+    SecurityProtocol SecurityProtocol { get; }
+
+    string Debug { get; }
+
+    int RequestRequiredAcks { get; }
+
+    double QueueBufferingMaxMs { get; }
 }

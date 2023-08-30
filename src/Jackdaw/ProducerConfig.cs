@@ -16,6 +16,12 @@ public class ProducerConfig : ClientConfig
     {
     }
 
+    public double? LingerMs
+    {
+        get => GetDouble("linger.ms");
+        set => SetObject("linger.ms", value);
+    }
+
     public ProducerConfig ThrowIfContainsNonUserConfigurable()
     {
         return this;

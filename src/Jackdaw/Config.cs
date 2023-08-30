@@ -1,4 +1,7 @@
 ﻿using System.Collections;
+using System.Collections.Concurrent;
+using System.Reflection;
+using System.Runtime.Serialization;
 using Jackdaw.Configuration;
 
 namespace Jackdaw;
@@ -7,31 +10,7 @@ public class Config : IEnumerable<KeyValuePair<string, string>>
 {
     private static readonly ConfigBuilder KnownConfig = new();
 
-    private static readonly Dictionary<string, string> EnumNameToValueLoookup = new(StringComparer.OrdinalIgnoreCase)
-    {
-        {"consistentrandom", "consistent_random"},
-        {"cooperativesticky", "cooperative-sticky"},
-        {"murmur2random", "murmur2_random"},
-        {"readcommitted", "read_committed"},
-        {"readuncommitted", "read_uncommitted"},
-        {"resolvecanonicalbootstrapserversonly", "resolve_canonical_bootstrap_servers_only"},
-        {"saslplaintext", "sasl_plaintext"},
-        {"saslssl", "sasl_ssl"},
-        {"usealldnsips", "use_all_dns_ips"}
-    };
-
-    private static readonly Dictionary<string, string> EnumValueToNameLookup = new()
-    {
-        {"consistent_random", "consistentrandom"},
-        {"cooperative-sticky", "cooperativesticky"},
-        {"murmur2_random", "murmur2random"},
-        {"read_committed", "readcommitted"},
-        {"read_uncommitted", "readuncommitted"},
-        {"resolve_canonical_bootstrap_servers_only", "resolvecanonicalbootstrapserversonly"},
-        {"sasl_plaintext", "saslplaintext"},
-        {"sasl_ssl", "saslssl"},
-        {"use_all_dns_ips", "usealldnsips"}
-    };
+    private static readonly ConcurrentDictionary<Type, Map<string, string>> EnumLookups = new();
 
     private readonly Dictionary<string, string> properties;
 
@@ -101,11 +80,10 @@ public class Config : IEnumerable<KeyValuePair<string, string>>
             return null;
         }
 
-        var enumValue = EnumValueToNameLookup.TryGetValue(result, out var value)
-            ? value
-            : result;
+        var lookup = EnumLookups.GetOrAdd(type, _ => GetEnumMapping(type));
+        var value = lookup.GetReverse(result) ?? result;
 
-        return Enum.Parse(type, enumValue, true);
+        return Enum.Parse(type, value);
     }
 
     protected T? GetEnum<T>(string key)
@@ -130,15 +108,12 @@ public class Config : IEnumerable<KeyValuePair<string, string>>
             return;
         }
 
-        if (value is Enum)
+        if (value is Enum enumValue)
         {
-            var stringValue = value.ToString()!;
+            var type = enumValue.GetType();
+            var lookup = EnumLookups.GetOrAdd(type, _ => GetEnumMapping(type));
 
-            var enumValue = EnumNameToValueLoookup.TryGetValue(stringValue, out var result)
-                ? result
-                : stringValue;
-
-            properties[key] = enumValue;
+            properties[key] = lookup.GetForward(enumValue.ToString()) ?? enumValue.ToString().ToLowerInvariant();
         }
         else
         {
@@ -159,5 +134,29 @@ public class Config : IEnumerable<KeyValuePair<string, string>>
     internal IConfig Build()
     {
         return KnownConfig.Build(properties);
+    }
+
+    private Map<string, string> GetEnumMapping(Type type)
+    {
+        var keyValues = Enum.GetNames(type)
+            .Select(x =>
+            {
+                var attribute = type.GetField(x)?.GetCustomAttribute<EnumMemberAttribute>();
+
+                var member = !string.IsNullOrEmpty(attribute?.Value)
+                    ? attribute.Value
+                    : x.ToLowerInvariant();
+
+                return (x, member);
+            });
+
+        var map = new Map<string, string>();
+
+        foreach (var pair in keyValues)
+        {
+            map.Add(pair.x, pair.member);
+        }
+
+        return map;
     }
 }

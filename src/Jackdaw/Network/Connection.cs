@@ -30,7 +30,12 @@ public class Connection : IConnection
         this.host = host;
         this.port = port;
 
-        Channel.CreateUnbounded<byte>();
+        var channel = Channel.CreateUnbounded<byte>(new UnboundedChannelOptions
+        {
+            AllowSynchronousContinuations = false,
+            SingleReader = true,
+            SingleWriter = false
+        });
 
         reader = new SocketReader(socket, receiveBufferSize);
         readTask = Task.Run(ReadAsync);

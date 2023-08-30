@@ -2,11 +2,11 @@
 
 namespace Jackdaw.Messages;
 
-internal class MetadataRequestMessage : RequestMessage
+internal class ApiVersionsRequest : RequestMessage
 {
-    protected override ApiKey ApiKey => ApiKey.Metadata;
+    protected override ApiKey ApiKey => ApiKey.ApiVersions;
 
-    protected override ApiVersion ApiVersion => ApiVersion.Ignored;
+    protected override ApiVersion ApiVersion { get; }
 
     protected override int GetByteCount()
     {

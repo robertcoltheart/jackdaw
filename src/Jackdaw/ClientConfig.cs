@@ -40,6 +40,57 @@ public class ClientConfig : Config
         set => SetObject("broker.address.family", value);
     }
 
+    public SecurityProtocol? SecurityProtocol
+    {
+        get => GetEnum<SecurityProtocol>("security.protocol");
+        set => SetObject("security.protocol", value);
+    }
+
+    public string Debug
+    {
+        get => Get("debug")!;
+        set => Set("debug", value);
+    }
+
+    public Acks? Acks
+    {
+        get
+        {
+            return Get("acks") switch
+            {
+                null => Jackdaw.Acks.None,
+                "0" => Jackdaw.Acks.None,
+                "1" => Jackdaw.Acks.Leader,
+                "-1" => Jackdaw.Acks.All,
+                "all" => Jackdaw.Acks.All,
+                var x when true => (Acks) int.Parse(x)
+            };
+        }
+        set
+        {
+            if (!value.HasValue)
+            {
+                SetObject("acks", null);
+            }
+            else if (value == Jackdaw.Acks.None)
+            {
+                Set("acks", "0");
+            }
+            else if (value == Jackdaw.Acks.Leader)
+            {
+                Set("acks", "1");
+            }
+            else if (value == Jackdaw.Acks.All)
+            {
+                Set("acks", "-1");
+            }
+            else
+            {
+                Set("acks", ((int) value).ToString());
+            }
+        }
+    }
+
     public int? SocketReceiveBufferBytes { get; set; }
 
     public int? SocketTimeoutMs { get; set; }

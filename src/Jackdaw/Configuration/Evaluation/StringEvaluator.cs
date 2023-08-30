@@ -6,6 +6,8 @@ internal class StringEvaluator : ConfigEvaluator<string>
 {
     private string? defaultValue;
 
+    private string[]? allowed;
+
     public StringEvaluator(string name, PropertyInfo property)
         : base(name, property)
     {
@@ -27,11 +29,8 @@ internal class StringEvaluator : ConfigEvaluator<string>
 
     public StringEvaluator Allowed(params string[] values)
     {
-        return this;
-    }
+        allowed = values;
 
-    public StringEvaluator AllowMultiple()
-    {
         return this;
     }
 
@@ -42,6 +41,26 @@ internal class StringEvaluator : ConfigEvaluator<string>
 
     protected override string? GetValue(string? value)
     {
-        throw new ArgumentException($"Invalid value for configuration property \"{Name}\": {value}");
+        if (value == null)
+        {
+            return defaultValue;
+        }
+
+        if (allowed != null)
+        {
+            var values = value.Split(',');
+
+            foreach (var part in values)
+            {
+                if (!allowed.Contains(part))
+                {
+                    throw new ArgumentException($"Invalid value \"{part}\" for configuration property \"{Name}\"");
+                }
+            }
+
+            return string.Join(',', values);
+        }
+
+        return value;
     }
 }
