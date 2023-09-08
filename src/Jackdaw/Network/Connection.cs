@@ -49,7 +49,7 @@ public class Connection : IConnection
         }
         catch
         {
-            throw new KafkaException("Can't connect");
+            throw new KafkaException(ErrorCode.Local_BadMsg); //"Can't connect"
         }
     }
 

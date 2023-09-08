@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka;
+using Confluent.Kafka.SyncOverAsync;
 
 var a = new AdminClientConfig();
 var b = new ConsumerConfig();

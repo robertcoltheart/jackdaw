@@ -1,8 +1,8 @@
 ﻿namespace Jackdaw;
 
-public interface IProducer<TKey, TValue> : IDisposable
+public interface IProducer<TKey, TValue> : IClient
 {
-    void Produce(string topic, Message<TKey, TValue> message);
+    void Produce(string topic, Message<TKey, TValue> message, Action<DeliveryReport<TKey, TValue>>? deliveryHandler = null);
 
-    Task ProduceAsync(string topic, Message<TKey, TValue> message);
+    Task<DeliveryResult<TKey, TValue>> ProduceAsync(string topic, Message<TKey, TValue> message, CancellationToken cancellationToken = default);
 }

@@ -12,11 +12,13 @@ public class Consumer<TKey, TValue> : IConsumer<TKey, TValue>
         cluster.Start();
     }
 
+    public string Name { get; }
+
     public void Subscribe(string topic)
     {
     }
 
-    public ConsumeResult<TKey, TValue> Consume()
+    public ConsumeResult<TKey, TValue> Consume(CancellationToken cancellationToken = default)
     {
         return new ConsumeResult<TKey, TValue>();
     }
