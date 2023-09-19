@@ -1,34 +1,29 @@
 ﻿using Confluent.Kafka;
 
-var a = new AdminClientConfig();
-var b = new ConsumerConfig();
-var c = new ProducerConfig();
-
 var producerConfig = new ProducerConfig
 {
     BootstrapServers = "localhost:9092"
 };
 
-producerConfig.Debug = "generic, broer";
-
-var producer = new ProducerBuilder<string, string>(producerConfig)
-    .Build();
-
 var consumerConfig = new ConsumerConfig
 {
     BootstrapServers = "localhost:9092",
-    AutoOffsetReset = AutoOffsetReset.Earliest,
-    GroupId = "my-group",
+    GroupId = "my-group"
 };
 
-//var consumer = new ConsumerBuilder<string, string>(consumerConfig)
-//    .SetLogHandler((_, log) => Console.WriteLine(log.Message))
-//    .Build();
+using var producer = new ProducerBuilder<string, string>(producerConfig)
+    .Build();
 
-producer.Produce("my-topic", new Message<string, string> { Key = "key", Value = "value" });
+using var consumer = new ConsumerBuilder<string, string>(consumerConfig)
+    .Build();
 
-//consumer.Subscribe("my-topic");
+producer.Produce("my-topic", new Message<string, string>
+{
+    Key = "key", Value = "value"
+});
 
-//var result = consumer.Consume();
+consumer.Subscribe("my-topic");
+
+var result = consumer.Consume();
 
 Console.ReadKey();

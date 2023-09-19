@@ -33,7 +33,7 @@ internal class SocketReader
 
             if (read == 0)
             {
-                throw new KafkaException("Socket was closed");
+                throw new KafkaException(ErrorCode.Local_BadMsg); // socket was closed
             }
 
             sequence.Append(buffer.Slice(0, read));

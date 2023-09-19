@@ -11,21 +11,23 @@ public class Producer<TKey, TValue> : IProducer<TKey, TValue>
         this.config = config;
     }
 
-    public void Produce(string topic, Message<TKey, TValue> message)
+    public string Name { get; }
+
+    public void Dispose()
     {
-        
     }
 
-    public Task ProduceAsync(string topic, Message<TKey, TValue> message)
+    public void Produce(string topic, Message<TKey, TValue> message, Action<DeliveryReport<TKey, TValue>>? deliveryHandler = null)
     {
-        return Task.CompletedTask;
+        throw new NotImplementedException();
+    }
+
+    public Task<DeliveryResult<TKey, TValue>> ProduceAsync(string topic, Message<TKey, TValue> message, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
     }
 
     private void ReceiveCompleted(object sender, SocketAsyncEventArgs e)
-    {
-    }
-
-    public void Dispose()
     {
     }
 }
