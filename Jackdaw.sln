@@ -8,9 +8,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jackdaw.Tests", "src\Jackda
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jackdaw.Cli", "src\Jackdaw.Cli\Jackdaw.Cli.csproj", "{CA6A3E66-8454-4C3C-A7F0-F65718D447FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jackdaw.Protocol.Server.Cli", "src\Jackdaw.Protocol.Server.Cli\Jackdaw.Protocol.Server.Cli.csproj", "{A8986198-D51E-4013-AEB0-D3DD4AF6729E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jackdaw.Protocol.Server.Cli", "src\Jackdaw.Protocol.Server.Cli\Jackdaw.Protocol.Server.Cli.csproj", "{A8986198-D51E-4013-AEB0-D3DD4AF6729E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jackdaw.Protocol.Client.Cli", "src\Jackdaw.Protocol.Client.Cli\Jackdaw.Protocol.Client.Cli.csproj", "{21F982BA-5A06-48F3-9B38-D23C76F673D7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jackdaw.Protocol.Client.Cli", "src\Jackdaw.Protocol.Client.Cli\Jackdaw.Protocol.Client.Cli.csproj", "{21F982BA-5A06-48F3-9B38-D23C76F673D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

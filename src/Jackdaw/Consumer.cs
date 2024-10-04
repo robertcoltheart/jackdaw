@@ -8,7 +8,7 @@ public class Consumer<TKey, TValue> : IConsumer<TKey, TValue>
 
     internal Consumer(ConsumerConfig config, Action<IConsumer<TKey, TValue>, LogMessage> handler)
     {
-        cluster = new Cluster(config, message => handler(this, message));
+        cluster = new Cluster(config, new NodeFactory(), message => handler(this, message));
         cluster.Start();
     }
 
