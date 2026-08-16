@@ -1,4 +1,4 @@
-﻿namespace Jackdaw;
+namespace Jackdaw;
 
 public class LogMessage
 {
@@ -17,4 +17,9 @@ public class LogMessage
     public string Facility { get; }
 
     public string Message { get; }
+
+    public int LevelAs(LogLevelType type)
+    {
+        return 0;
+    }
 }

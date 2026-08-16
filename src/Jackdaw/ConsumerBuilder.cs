@@ -1,12 +1,8 @@
-﻿namespace Jackdaw;
+namespace Jackdaw;
 
-public class ConsumerBuilder<TKey, TValue>
+public class ConsumerBuilder<TKey, TValue>(IEnumerable<KeyValuePair<string, string>> config)
 {
     protected internal Action<IConsumer<TKey, TValue>, LogMessage> LogHandler { get; set; }
-
-    public ConsumerBuilder(ConsumerConfig config)
-    {
-    }
 
     public ConsumerBuilder<TKey, TValue> SetLogHandler(Action<IConsumer<TKey, TValue>, LogMessage> handler)
     {
@@ -15,7 +11,7 @@ public class ConsumerBuilder<TKey, TValue>
         return this;
     }
 
-    public IConsumer<TKey, TValue> Build()
+    public virtual IConsumer<TKey, TValue> Build()
     {
         var config = new ConsumerConfig();
 

@@ -1,13 +1,12 @@
-﻿using System.Buffers;
+using System.Buffers;
 using Jackdaw.Network;
-using Xunit;
 
 namespace Jackdaw.Tests.Network;
 
 public class MemorySequenceBuilderTests
 {
-    [Fact]
-    public void CanAppendSegments()
+    [Test]
+    public async Task CanAppendSegments()
     {
         var builder = new MemorySequenceBuilder();
         builder.Append(new byte[] { 1, 2 });
@@ -16,13 +15,13 @@ public class MemorySequenceBuilderTests
 
         var sequence = builder.ToReadOnlySequence();
 
-        Assert.Equal(6, sequence.Length);
-        Assert.Equal(new byte[] { 1, 2, 3, 4, 5, 6 }, sequence.ToArray());
-        Assert.Equal(3, sequence.GetSegmentCount());
+        await Assert.That(sequence.Length).IsEqualTo(6);
+        await Assert.That(sequence.ToArray()).IsEqualTo([1, 2, 3, 4, 5, 6]);
+        await Assert.That(sequence.GetSegmentCount()).IsEqualTo(3);
     }
 
-    [Fact]
-    public void CanAdvanceToNextSegment()
+    [Test]
+    public async Task CanAdvanceToNextSegment()
     {
         var builder = new MemorySequenceBuilder(false);
         builder.Append(new byte[] { 1, 2 });
@@ -35,13 +34,13 @@ public class MemorySequenceBuilderTests
 
         var sequence = builder.ToReadOnlySequence();
 
-        Assert.Equal(3, sequence.Length);
-        Assert.Equal(new byte[] { 4, 5, 6 }, sequence.ToArray());
-        Assert.Equal(2, sequence.GetSegmentCount());
+        await Assert.That(sequence.Length).IsEqualTo(3);
+        await Assert.That(sequence.ToArray()).IsEqualTo([4, 5, 6]);
+        await Assert.That(sequence.GetSegmentCount()).IsEqualTo(2);
     }
 
-    [Fact]
-    public void CanAdvanceToLastSegment()
+    [Test]
+    public async Task CanAdvanceToLastSegment()
     {
         var builder = new MemorySequenceBuilder(false);
         builder.Append(new byte[] { 1, 2 });
@@ -54,8 +53,8 @@ public class MemorySequenceBuilderTests
 
         var sequence = builder.ToReadOnlySequence();
 
-        Assert.Equal(1, sequence.Length);
-        Assert.Equal(new byte[] { 6 }, sequence.ToArray());
-        Assert.Equal(1, sequence.GetSegmentCount());
+        await Assert.That(sequence.Length).IsEqualTo(1);
+        await Assert.That(sequence.ToArray()).IsEqualTo([6]);
+        await Assert.That(sequence.GetSegmentCount()).IsEqualTo(1);
     }
 }

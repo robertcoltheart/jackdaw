@@ -1,26 +1,25 @@
-﻿using System.Buffers;
+using System.Buffers;
 using Jackdaw.Network;
-using Xunit;
 
 namespace Jackdaw.Tests.Network;
 
 public class MemorySegmentTests
 {
-    [Fact]
-    public void CanAddSingleBuffer()
+    [Test]
+    public async Task CanAddSingleBuffer()
     {
         var segment = MemorySegment.Create(new byte[] { 1, 2 });
 
         var sequence = new ReadOnlySequence<byte>(segment, 0, segment, segment.Memory.Length);
         var buffer = sequence.ToArray();
 
-        Assert.Equal(2, sequence.Length);
-        Assert.Equal(1, sequence.GetSegmentCount());
-        Assert.Equal(new byte[] { 1, 2 }, buffer);
+        await Assert.That(sequence.Length).IsEqualTo(2);
+        await Assert.That(sequence.GetSegmentCount()).IsEqualTo(1);
+        await Assert.That(buffer).IsEqualTo(new byte[] { 1, 2 });
     }
 
-    [Fact]
-    public void CanAddMultipleBuffers()
+    [Test]
+    public async Task CanAddMultipleBuffers()
     {
         var first = MemorySegment.Create(new byte[] { 1, 2 });
         var second = MemorySegment.Create(new byte[] { 3, 4 }, first);
@@ -29,13 +28,13 @@ public class MemorySegmentTests
         var sequence = new ReadOnlySequence<byte>(first, 0, last, last.Memory.Length);
         var buffer = sequence.ToArray();
 
-        Assert.Equal(6, sequence.Length);
-        Assert.Equal(3, sequence.GetSegmentCount());
-        Assert.Equal(new byte[] { 1, 2, 3, 4, 5, 6 }, buffer);
+        await Assert.That(sequence.Length).IsEqualTo(6);
+        await Assert.That(sequence.GetSegmentCount()).IsEqualTo(3);
+        await Assert.That(buffer).IsEqualTo(new byte[] { 1, 2, 3, 4, 5, 6 });
     }
 
-    [Fact]
-    public void CanRecycleUpToSegment()
+    [Test]
+    public async Task CanRecycleUpToSegment()
     {
         var first = MemorySegment.Create(new byte[] { 1, 2 });
         var second = MemorySegment.Create(new byte[] { 3, 4 }, first);
@@ -44,13 +43,13 @@ public class MemorySegmentTests
         MemorySegment.RecycleChain(first, last, false);
         var sequence = new ReadOnlySequence<byte>(last, 0, last, last.Memory.Length);
 
-        Assert.Equal(default, first.Memory);
-        Assert.Equal(default, second.Memory);
-        Assert.NotEqual(default, last.Memory);
-        Assert.Equal(1, sequence.GetSegmentCount());
+        await Assert.That(first.Memory).IsEqualTo(default);
+        await Assert.That(second.Memory).IsEqualTo(default);
+        await Assert.That(last.Memory).IsNotEqualTo(default);
+        await Assert.That(sequence.GetSegmentCount()).IsEqualTo(1);
     }
 
-    [Fact]
+    [Test]
     public void CanRentAndRecycleSegment()
     {
         var memory = MemorySegment.Rent(10);
@@ -59,8 +58,8 @@ public class MemorySegmentTests
         MemorySegment.RecycleChain(segment);
     }
 
-    [Fact]
-    public void CanSliceAndSetIndex()
+    [Test]
+    public async Task CanSliceAndSetIndex()
     {
         var segment = MemorySegment.Create(new byte[] { 1, 2, 3 });
         segment.SetRunningIndex(1);
@@ -68,11 +67,11 @@ public class MemorySegmentTests
         var sequence = new ReadOnlySequence<byte>(segment, 0, segment, segment.Memory.Length);
         var buffer = sequence.ToArray();
 
-        Assert.Equal(new byte[] { 2, 3 }, buffer);
+        await Assert.That(buffer).IsEqualTo(new byte[] { 2, 3 });
     }
 
-    [Fact]
-    public void CanAlignIndexes()
+    [Test]
+    public async Task CanAlignIndexes()
     {
         var first = MemorySegment.Create(new byte[] { 1, 2, 3 });
         var second = MemorySegment.Create(new byte[] { 4, 5, 6 }, first);
@@ -81,7 +80,7 @@ public class MemorySegmentTests
 
         var sequence = new ReadOnlySequence<byte>(first, 0, second, second.Memory.Length);
 
-        Assert.Equal(5, sequence.Length);
-        Assert.Equal(new byte[] { 2, 3, 4, 5, 6 }, sequence.ToArray());
+        await Assert.That(sequence.Length).IsEqualTo(5);
+        await Assert.That(sequence.ToArray()).IsEqualTo(new byte[] { 2, 3, 4, 5, 6 });
     }
 }

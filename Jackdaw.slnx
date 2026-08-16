@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="src/Jackdaw.Cli/Jackdaw.Cli.csproj" />
+  <Project Path="src/Jackdaw.Protocol.Client.Cli/Jackdaw.Protocol.Client.Cli.csproj" />
+  <Project Path="src/Jackdaw.Protocol.Server.Cli/Jackdaw.Protocol.Server.Cli.csproj" />
+  <Project Path="src/Jackdaw.Tests/Jackdaw.Tests.csproj" />
+  <Project Path="src/Jackdaw/Jackdaw.csproj" />
+</Solution>

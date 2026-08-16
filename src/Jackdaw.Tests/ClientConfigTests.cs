@@ -1,11 +1,9 @@
-﻿using Xunit;
-
 namespace Jackdaw.Tests;
 
 public class ClientConfigTests
 {
-    [Fact]
-    public void CanSetSecurityProtocol()
+    [Test]
+    public async Task CanSetSecurityProtocol()
     {
         var config = new ClientConfig
         {
@@ -14,21 +12,21 @@ public class ClientConfigTests
 
         var value = config.Get("security.protocol");
 
-        Assert.Equal("sasl_plaintext", value);
-        Assert.Equal(SecurityProtocol.SaslPlaintext, config.SecurityProtocol);
+        await Assert.That(value).IsEqualTo("sasl_plaintext");
+        await Assert.That(config.SecurityProtocol).IsEqualTo(SecurityProtocol.SaslPlaintext);
     }
 
-    [Fact]
-    public void CanSetEnumByNumber()
+    [Test]
+    public async Task CanSetEnumByNumber()
     {
         var config = new ClientConfig();
         config.Set("broker.address.family", "2");
 
-        Assert.Equal(BrokerAddressFamily.V6, config.BrokerAddressFamily);
+        await Assert.That(config.BrokerAddressFamily).IsEqualTo(BrokerAddressFamily.V6);
     }
 
-    [Fact]
-    public void CanSetEnumOvervalue()
+    [Test]
+    public async Task CanSetEnumOvervalue()
     {
         var config = new ClientConfig
         {
@@ -37,7 +35,7 @@ public class ClientConfigTests
 
         var value = config.Get("acks");
 
-        Assert.Equal(59, (int) config.Acks!);
-        Assert.Equal("59", value);
+        await Assert.That((int) config.Acks!).IsEqualTo(59);
+        await Assert.That(value).IsEqualTo("59");
     }
 }

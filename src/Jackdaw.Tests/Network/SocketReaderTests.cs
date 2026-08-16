@@ -1,46 +1,33 @@
-﻿using System;
 using System.Buffers;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FakeItEasy;
 using Jackdaw.Network;
-using Xunit;
 
 namespace Jackdaw.Tests.Network;
 
 public class SocketReaderTests
 {
-    [Fact]
+    [Test]
     public async Task CanReadSegment()
     {
-        var socket = A.Fake<ISocket>();
+        var socket = ISocket.Mock();
 
-        A.CallTo(() => socket.ReceiveAsync(A<Memory<byte>>.Ignored))
-            .Invokes((Memory<byte> memory) =>
-            {
-                new byte[] { 1, 2, 3, 4 }.CopyTo(memory.Span);
-            })
+        socket.ReceiveAsync(Any())
+            .Callback(memory => new byte[] { 1, 2, 3, 4 }.CopyTo(memory.Span))
             .Returns(4);
 
         var reader = new SocketReader(socket, 10);
         var sequence = await reader.ReadAsync(4);
 
-        Assert.Equal(1, sequence.GetSegmentCount());
-        Assert.Equal(new byte[] { 1, 2, 3, 4 }, sequence.ToArray());
+        await Assert.That(sequence.GetSegmentCount()).IsEqualTo(1);
+        await Assert.That(sequence.ToArray()).IsEqualTo(new byte[] { 1, 2, 3, 4 });
     }
 
-    [Fact]
+    [Test]
     public async Task CanReadMultipleSegments()
     {
-        var socket = A.Fake<ISocket>();
+        var socket = ISocket.Mock();
 
-        A.CallTo(() => socket.ReceiveAsync(A<Memory<byte>>.Ignored))
-            .Invokes((Memory<byte> memory) =>
-            {
-                new byte[] { 1, 2, 3, 4 }.CopyTo(memory.Span);
-            })
+        socket.ReceiveAsync(Any())
+            .Callback(memory => new byte[] { 1, 2, 3, 4 }.CopyTo(memory.Span))
             .Returns(4);
 
         var reader = new SocketReader(socket, 2);
@@ -50,7 +37,7 @@ public class SocketReaderTests
             .SelectMany(x => x)
             .ToArray();
 
-        Assert.True(sequence.GetSegmentCount() > 1);
-        Assert.Equal(expected, sequence.ToArray());
+        await Assert.That(sequence.GetSegmentCount()).IsGreaterThan(1);
+        await Assert.That(sequence.ToArray()).IsEqualTo(expected);
     }
 }
