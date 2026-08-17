@@ -1,4 +1,4 @@
-﻿using System.Buffers;
+using System.Buffers;
 
 namespace Jackdaw.Network;
 
@@ -33,7 +33,6 @@ internal class SocketReader
 
             if (read == 0)
             {
-                throw new KafkaException(ErrorCode.Local_BadMsg); // socket was closed
             }
 
             sequence.Append(buffer.Slice(0, read));

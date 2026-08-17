@@ -1,11 +1,11 @@
-﻿using System.Threading.Tasks.Dataflow;
+using System.Threading.Tasks.Dataflow;
 using Jackdaw.Network;
 
 namespace Jackdaw.Brokering;
 
 public class Node : INode
 {
-    public Node(string name, Func<IConnection> connectionFactory, ClientConfig config, double resolution = 1000)
+    public Node(string name, Func<IConnection> connectionFactory, double resolution = 1000)
     {
         Name = name;
     }

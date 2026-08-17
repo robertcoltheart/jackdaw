@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Net.Sockets;
 using System.Reflection.Metadata.Ecma335;
 using System.Threading.Channels;
@@ -49,7 +49,6 @@ public class Connection : IConnection
         }
         catch
         {
-            throw new KafkaException(ErrorCode.Local_BadMsg); //"Can't connect"
         }
     }
 

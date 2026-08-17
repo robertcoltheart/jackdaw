@@ -1,16 +1,13 @@
-﻿namespace Jackdaw.Brokering;
+namespace Jackdaw.Brokering;
 
 public class Cluster
 {
-    private readonly ClientConfig config;
-
     private readonly INodeFactory nodeFactory;
 
     private bool started;
 
-    public Cluster(ClientConfig config, INodeFactory nodeFactory, Action<LogMessage> logger)
+    public Cluster(INodeFactory nodeFactory)
     {
-        this.config = config;
         this.nodeFactory = nodeFactory;
     }
 

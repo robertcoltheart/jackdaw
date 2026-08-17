@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Reflection;
 using System.Runtime.Serialization;
@@ -8,8 +8,6 @@ namespace Jackdaw;
 
 public class Config : IEnumerable<KeyValuePair<string, string>>
 {
-    private static readonly ConfigBuilder KnownConfig = new();
-
     private static readonly ConcurrentDictionary<Type, Map<string, string>> EnumLookups = new();
 
     private readonly Dictionary<string, string> properties;
@@ -129,11 +127,6 @@ public class Config : IEnumerable<KeyValuePair<string, string>>
     IEnumerator IEnumerable.GetEnumerator()
     {
         return GetEnumerator();
-    }
-
-    internal IConfig Build()
-    {
-        return KnownConfig.Build(properties);
     }
 
     private Map<string, string> GetEnumMapping(Type type)
