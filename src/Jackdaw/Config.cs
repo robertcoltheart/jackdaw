@@ -27,26 +27,13 @@ public class Config : IEnumerable<KeyValuePair<string, string>>
         properties = config.ToDictionary(x => x.Key, x => x.Value);
     }
 
-    public void Set(string key, string value)
-    {
-        properties[key] = value;
-    }
+    public int CancellationDelayMaxMs { get; set; }
 
     public string? Get(string key)
     {
         properties.TryGetValue(key, out var value);
 
         return value;
-    }
-
-    protected int? GetInt(string key)
-    {
-        if (int.TryParse(Get(key), out var result))
-        {
-            return result;
-        }
-
-        return null;
     }
 
     protected bool? GetBool(string key)
@@ -84,17 +71,19 @@ public class Config : IEnumerable<KeyValuePair<string, string>>
         return Enum.Parse(type, value);
     }
 
-    protected T? GetEnum<T>(string key)
-        where T : Enum
+    protected int? GetInt(string key)
     {
-        var result = GetEnum(typeof(T), key);
-
-        if (result == null)
+        if (int.TryParse(Get(key), out var result))
         {
-            return default;
+            return result;
         }
 
-        return (T) result;
+        return null;
+    }
+
+    public void Set(string key, string value)
+    {
+        properties[key] = value;
     }
 
     protected void SetObject(string key, object? value)
@@ -117,6 +106,19 @@ public class Config : IEnumerable<KeyValuePair<string, string>>
         {
             properties[key] = value.ToString()!;
         }
+    }
+
+    protected T? GetEnum<T>(string key)
+        where T : Enum
+    {
+        var result = GetEnum(typeof(T), key);
+
+        if (result == null)
+        {
+            return default;
+        }
+
+        return (T) result;
     }
 
     public IEnumerator<KeyValuePair<string, string>> GetEnumerator()

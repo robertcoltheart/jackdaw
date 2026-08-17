@@ -1,4 +1,4 @@
-﻿using Confluent.Kafka;
+using Confluent.Kafka;
 
 var producerConfig = new ProducerConfig
 {
@@ -8,7 +8,8 @@ var producerConfig = new ProducerConfig
 var consumerConfig = new ConsumerConfig
 {
     BootstrapServers = "localhost:9092",
-    GroupId = "my-group"
+    AutoOffsetReset = AutoOffsetReset.Earliest,
+    GroupId = "my-group1"
 };
 
 using var producer = new ProducerBuilder<string, string>(producerConfig)
@@ -19,7 +20,8 @@ using var consumer = new ConsumerBuilder<string, string>(consumerConfig)
 
 producer.Produce("my-topic", new Message<string, string>
 {
-    Key = "key", Value = "value"
+    Key = "key",
+    Value = "value"
 });
 
 consumer.Subscribe("my-topic");
